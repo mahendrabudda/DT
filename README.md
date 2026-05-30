@@ -1,447 +1,231 @@
-# Trinethra — DT Fellows Feedback Analyzer
+# README Requirements
 
-A MERN stack web application that analyzes supervisor feedback transcripts using a local LLM powered by Ollama and Llama 3.2.
+## 1. Setup Instructions
 
-The system evaluates fellows based on organizational capability, systems thinking, operational leverage, and process-building ability.
+### Prerequisites
 
----
-
-# Project Overview
-
-This project was built as part of the DT Fellows AI Evaluation Assignment.
-
-The application takes a supervisor conversation transcript as input and returns:
-
-* Rubric score
-* Evidence extraction
-* KPI mapping
-* Gap analysis
-* Follow-up questions
-
-The analysis is performed using a locally running LLM through Ollama.
-
----
-
-# Tech Stack
-
-## Frontend
-
-* React.js
-* Vite
-* JavaScript
-* CSS (inline styling)
-
-## Backend
-
-* Node.js
-* Express.js
-
-## AI / LLM
-
+* Node.js (v18 or above)
+* npm
 * Ollama
-* Llama 3.2
 
----
+### Install Dependencies
 
-# Folder Structure
-
-```bash
-dt-culturetech-ai-analyzer/
-│
-├── client/                 # React frontend
-│
-├── server/                 # Express backend
-│   ├── prompts/
-│   │   └── systemPrompt.js
-│   │
-│   ├── routes/
-│   │   └── analyze.js
-│   │
-│   ├── services/
-│   │   └── ollamaService.js
-│   │
-│   └── server.js
-│
-├── sample-transcripts.json
-├── rubric.json
-├── context.md
-├── assignment.md
-│
-└── README.md
-```
-
----
-
-# What is Ollama?
-
-Ollama allows Large Language Models (LLMs) like Llama to run locally on your computer.
-
-Instead of sending data to OpenAI or cloud APIs, the model runs directly on your machine.
-
-Benefits:
-
-* No API cost
-* Local processing
-* Faster experimentation
-* Privacy-friendly
-
----
-
-# What is Llama 3.2?
-
-Llama 3.2 is a Large Language Model created by Meta.
-
-In this project, it is used to:
-
-* Read transcripts
-* Understand supervisor feedback
-* Extract operational signals
-* Score fellows using rubric logic
-
----
-
-# How the Project Works
-
-## Step 1 — User Pastes Transcript
-
-The frontend accepts a supervisor feedback transcript.
-
-Example:
-
-```text
-"Karthik is very sincere. He manages production tracking..."
-```
-
----
-
-## Step 2 — Frontend Sends Request
-
-React frontend sends transcript to backend API.
+Backend:
 
 ```bash
-POST /api/analyze
+cd server
+npm install
 ```
 
----
-
-## Step 3 — Backend Calls Ollama
-
-Express backend sends:
-
-* system prompt
-* transcript
-* rubric instructions
-
-to the local Llama model using Ollama.
-
----
-
-## Step 4 — LLM Analyzes Transcript
-
-The model evaluates:
-
-* systems thinking
-* operational leverage
-* dependency risk
-* process building
-* scalability
-
----
-
-## Step 5 — Structured JSON Response
-
-Backend returns structured JSON:
-
-```json
-{
-  "score": {
-    "value": 6,
-    "label": "Emerging Systems Thinker",
-    "band": "Layer 1 → Layer 2",
-    "justification": "Shows early systems thinking..."
-  }
-}
-```
-
----
-
-# Installation Guide
-
-# 1. Clone Repository
-
-```bash
-git clone <your-github-url>
-cd dt-culturetech-ai-analyzer
-```
-
----
-
-# 2. Install Frontend Dependencies
+Frontend:
 
 ```bash
 cd client
 npm install
 ```
 
----
-
-# 3. Install Backend Dependencies
-
-```bash
-cd ../server
-npm install
-```
-
-Install required packages:
-
-```bash
-npm install express cors axios
-```
-
----
-
-# 4. Install Ollama
-
-Download Ollama:
-
-https://ollama.com
-
-Install it normally.
-
----
-
-# 5. Pull Llama 3.2 Model
-
-Open terminal:
+### Download LLM
 
 ```bash
 ollama pull llama3.2
 ```
 
-This downloads the model locally.
-
----
-
-# 6. Verify Ollama
-
-Run:
+### Start Ollama
 
 ```bash
 ollama run llama3.2
 ```
 
-Test:
-
-```text
-hi
-```
-
-If the model responds, setup is successful.
-
----
-
-# Running the Project
-
-# Start Backend
+### Start Backend
 
 ```bash
 cd server
 node server.js
 ```
 
-Expected:
-
-```bash
-Server running on port 5000
-```
-
----
-
-# Start Frontend
-
-Open another terminal:
+### Start Frontend
 
 ```bash
 cd client
 npm run dev
 ```
 
-Expected:
+Application will be available at:
 
-```bash
-Local: http://localhost:5173
+```text
+http://localhost:5173
 ```
 
 ---
 
-# API Endpoint
+# 2. Architecture
 
-## POST `/api/analyze`
+The application follows a simple client-server architecture.
 
-### Request
-
-```json
-{
-  "transcript": "Supervisor feedback transcript here..."
-}
+```text
+User
+  │
+  ▼
+React Frontend
+  │
+  ▼
+Express Backend
+  │
+  ▼
+Ollama API
+  │
+  ▼
+Llama 3.2 Model
+  │
+  ▼
+Structured JSON Response
+  │
+  ▼
+React Dashboard
 ```
 
----
+### Flow
 
-### Response
-
-```json
-{
-  "score": {
-    "value": 6,
-    "label": "Emerging Systems Thinker",
-    "band": "Layer 1 → Layer 2",
-    "justification": "Shows early systems thinking..."
-  },
-  "evidence": [],
-  "kpiMapping": [],
-  "gaps": [],
-  "followUpQuestions": []
-}
-```
+1. User pastes supervisor transcript.
+2. Frontend sends transcript to backend.
+3. Backend combines transcript with system prompt.
+4. Ollama forwards prompt to Llama 3.2.
+5. Model analyzes transcript using rubric rules.
+6. Structured JSON is returned.
+7. Frontend displays score, evidence, KPI mapping, gaps, and follow-up questions.
 
 ---
 
-# Important Learning Concepts
+# 3. Ollama Model
 
-## 1. Prompt Engineering
+## Model Used
 
-The quality of results depends heavily on the system prompt.
+Llama 3.2
 
-The prompt teaches the LLM:
+### Why Llama 3.2?
 
-* how to evaluate
-* what signals matter
-* how scoring should work
+* Runs locally on consumer laptops.
+* No API costs.
+* Strong reasoning capabilities.
+* Easy integration with Ollama.
+* Suitable for prompt-engineering experiments.
 
----
+### Why Ollama?
 
-## 2. Systems Thinking vs Helpfulness
+Ollama provides a simple local interface for running LLMs.
 
-The assignment intentionally contains traps.
+Benefits:
 
-Example:
+* Offline execution
+* Data privacy
+* No external API dependency
+* Fast development workflow
 
-* Helpful employee ≠ scalable systems builder
-* Critical supervisor ≠ weak fellow
+### Model Invocation
 
-The model must reason carefully.
+Backend sends:
 
----
+* System prompt
+* Transcript
+* Evaluation instructions
 
-## 3. Local LLM
+to Ollama's local API.
 
-This project uses a local AI model instead of cloud APIs.
-
-Advantages:
-
-* No token cost
-* Works offline
-* Faster iteration
-* Better privacy
-
----
-
-# Sample Test Cases
-
-The repository contains 3 sample transcripts:
-
-| Transcript | Key Evaluation Trap                             |
-| ---------- | ----------------------------------------------- |
-| Karthik    | Positive supervisor but mostly operational work |
-| Meena      | Critical supervisor but real systems thinking   |
-| Anil       | Very helpful but creates dependency             |
+The model returns structured JSON output used by the frontend.
 
 ---
 
-# Current Features
+# 4. Design Decisions
 
-* Transcript analysis
-* Rubric scoring
-* Evidence extraction
-* KPI mapping
-* Gap analysis
-* Follow-up question generation
-* Local LLM integration
-* Clean React dashboard UI
+## Local LLM Instead of Cloud APIs
 
----
+Chosen because:
 
-# Future Improvements
-
-* MongoDB integration
-* Transcript history
-* Authentication
-* PDF report export
-* Multiple model support
-* Streaming responses
-* Better prompt optimization
+* No usage costs.
+* Easier testing.
+* Better privacy.
+* Assignment specifically encourages local deployment.
 
 ---
 
-# Troubleshooting
+## Structured JSON Output
 
-## Blank White Screen
+The model is instructed to return JSON rather than free-form text.
 
-Check:
+Benefits:
 
-* component import names
-* syntax errors
-* Vite console logs
-
----
-
-## Ollama Not Responding
-
-Run:
-
-```bash
-ollama run llama3.2
-```
-
-If this fails:
-
-* restart Ollama
-* verify installation
+* Easy frontend rendering.
+* Predictable responses.
+* Simpler debugging.
 
 ---
 
-## Backend API Error
+## Prompt-Centric Evaluation
 
-Check:
+Business logic is primarily implemented through prompt engineering rather than hardcoded rules.
 
-* backend port
-* CORS setup
-* axios request URL
+Benefits:
 
----
-
-# Learning Outcomes
-
-This project helps understand:
-
-* MERN stack development
-* REST APIs
-* Local AI deployment
-* Prompt engineering
-* LLM reasoning
-* Organizational capability analysis
+* Easier iteration.
+* Flexible evaluation criteria.
+* Better alignment with rubric-based scoring.
 
 ---
 
-# Author
+## Separate Frontend and Backend
 
-Mahendra B
+The project uses a clean separation:
 
-Built using:
+Frontend:
 
-* React
-* Node.js
-* Express
-* Ollama
-* Llama 3.2
+* User interface
+* Result visualization
+
+Backend:
+
+* LLM communication
+* Prompt handling
+* Response parsing
+
+This improves maintainability and scalability.
+
+---
+
+# 5. Future Improvements
+
+## Short-Term
+
+* Improve prompt quality.
+* Better evidence extraction.
+* More accurate rubric scoring.
+* Additional transcript test cases.
+
+---
+
+## Medium-Term
+
+* Store transcript history in MongoDB.
+* User authentication.
+* Report generation.
+* Export analysis to PDF.
+
+---
+
+## Long-Term
+
+* Multi-model support.
+* Fine-tuned evaluation model.
+* Analytics dashboard.
+* Batch transcript processing.
+* Admin review workflows.
+* Confidence scoring.
+* Real-time streaming responses.
+
+---
+
+# Known Limitations
+
+* Evaluation quality depends heavily on prompt design.
+* Small local models may occasionally miss subtle rubric signals.
+* Scores may vary slightly between runs.
+* No persistent storage in the current version.
